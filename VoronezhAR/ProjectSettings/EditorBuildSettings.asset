@@ -6,7 +6,16 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/Test/Test.unity
-    guid: 5f2ec9e72047ca041bbc98f735cba853
+    path: Assets/Scenes/Menu.unity
+    guid: a7dfd9b5d1f124f47b9c619bceac2b7e
+  - enabled: 1
+    path: Assets/Scenes/GameAR.unity
+    guid: e7316a90ea3dafc4cb887a0d38343778
+  - enabled: 1
+    path: Assets/Scenes/Gameplay/TouwnGame.unity
+    guid: faeb657a07551d84a927d0ba24403337
+  - enabled: 1
+    path: Assets/Scenes/Gameplay/ForestGame.unity
+    guid: 333cccc14702d3f43ba5678e07c5c1e7
   m_configObjects: {}
   m_UseUCBPForAssetBundles: 0
