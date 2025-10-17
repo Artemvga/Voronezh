@@ -1526,15 +1526,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1546465119}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: dc6a03d9635f4f245af1feef05718ca9, type: 3}
+  m_Script: {fileID: 11500000, guid: af9662b09591d1f44b8156c9cdf0276e, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Menu
-  menuUI: {fileID: 1415739344}
-  mainMenuUI: {fileID: 729882058}
-  settingsUI: {fileID: 242861961}
-  loadUI: {fileID: 1833694390}
-  canvasUI: {fileID: 1399047351}
-  buttonExit: {fileID: 1493259262}
+  m_EditorClassIdentifier: Assembly-CSharp::PreparationScene
+  activationItems:
+  - {fileID: 1399047351}
+  - {fileID: 729882058}
+  - {fileID: 1415739344}
+  deactivationItems:
+  - {fileID: 242861961}
+  - {fileID: 1833694390}
 --- !u!1 &1763608054
 GameObject:
   m_ObjectHideFlags: 0
