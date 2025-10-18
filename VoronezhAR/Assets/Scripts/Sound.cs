@@ -18,4 +18,4 @@ public class Sounds : MonoBehaviour
     {
         audioScr.PlayOneShot(sounds[clip], value);
     }
-}
+}   

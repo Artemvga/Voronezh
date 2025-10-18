@@ -11,8 +11,7 @@ public class Kattsena : MonoBehaviour
     public Animator exitHouseAnimator;
     public string animationName = "YourAnimationName";
 
-    private bool isPlaying = false;
-
+    public static bool isPlaying = false;
     // Публичный метод для запуска извне
     public void StartSequence()
     {
@@ -55,6 +54,7 @@ public class Kattsena : MonoBehaviour
                 if (animator != null)
                 {
                     animator.Play(animationName);
+
                 }
                 else
                 {
@@ -66,15 +66,7 @@ public class Kattsena : MonoBehaviour
                 Debug.LogError("ExitHouse object not found!");
             }
         }
-
-        isPlaying = false;
-    }
-
-    // Метод для вызова извне с кастомными параметрами
-    public void StartSequenceWithParams(int clipIndex, float volume)
-    {
-        soundClipIndex = clipIndex;
-        soundVolume = volume;
-        StartSequence();
+        GameManager.isCasthen = true;
+        CombinedLocationScript.instance.Check();
     }
 }
