@@ -5859,9 +5859,9 @@ MonoBehaviour:
   - {fileID: 955401187}
   scoreText: {fileID: 1701411668}
   animalImage: {fileID: 87876487}
-  catSprite: {fileID: 21300000, guid: 5ab1eb04760b0e6449074a04aa5a6f65, type: 3}
-  dogSprite: {fileID: 21300000, guid: 4a89f8fdeb579e0468d5eb9a7839347c, type: 3}
-  cockSprite: {fileID: 21300000, guid: 6bb716e7cec3bcf489c5811ffb622dd5, type: 3}
+  catSprite: {fileID: 21300000, guid: 913a2075ceb1a2741a8585f25be61b6b, type: 3}
+  dogSprite: {fileID: 21300000, guid: d5685dd9275e8d540b9e873c5c90305d, type: 3}
+  cockSprite: {fileID: 21300000, guid: 134922211553f2a40a62039da79a9052, type: 3}
   catObject: {fileID: 919132149030793037}
   dogObject: {fileID: 1348800582}
   cockObject: {fileID: 919132148343519488}

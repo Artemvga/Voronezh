@@ -1184,6 +1184,7 @@ GameObject:
   - component: {fileID: 1546465121}
   - component: {fileID: 1546465120}
   - component: {fileID: 1546465122}
+  - component: {fileID: 1546465123}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -1242,8 +1243,20 @@ MonoBehaviour:
   - {fileID: 729882058}
   - {fileID: 1415739344}
   deactivationItems:
-  - {fileID: 0}
   - {fileID: 1833694390}
+--- !u!114 &1546465123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1546465119}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00fc9bdc78e494c44a14d51d7179bb40, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ExitController
+  buttonExit: {fileID: 1493259262}
 --- !u!1 &1763608054
 GameObject:
   m_ObjectHideFlags: 0

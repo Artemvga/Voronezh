@@ -22,10 +22,19 @@ public class DialogueTrigger : MonoBehaviour
     public GameObject joystick;
 
     [Header("Dialogue Images")]
-    public Sprite[] dialogueSprites;
+    public Sprite resident1Sprite;
+    public Sprite resident2Sprite;
+    public Sprite donkeySprite;
+    public Sprite dogSprite;
+    public Sprite catSprite;
+    public Sprite roosterSprite;
 
     private int currentDialogueIndex = 0;
     private bool isInTrigger = false;
+    private bool questAccepted = false;
+    private GameObject playerObject;
+    private Rigidbody playerRigidbody;
+    private Animator playerAnimator;
 
     public static bool AreBanditsDefeated { get; set; } = false;
 
@@ -84,27 +93,106 @@ public class DialogueTrigger : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Player") && !isInTrigger && !AreBanditsDefeated)
+        if (other.CompareTag("Player") && !isInTrigger && !AreBanditsDefeated && !questAccepted)
         {
             isInTrigger = true;
+            playerObject = other.gameObject;
 
-            // Останавливаем движение через Rigidbody velocity
-            if (other.TryGetComponent<Rigidbody>(out Rigidbody rb))
-            {
-                rb.linearVelocity = Vector3.zero;
-                rb.angularVelocity = Vector3.zero;
-            }
+            // Получаем компоненты для остановки движения
+            playerRigidbody = playerObject.GetComponent<Rigidbody>();
+            playerAnimator = playerObject.GetComponent<Animator>();
 
-            // Отключаем джойстик
-            if (joystick != null)
-            {
-                joystick.SetActive(false);
-            }
+            StopAllMovement();
+
+            // Отключаем джойстик при активации диалога
+            DisableJoystick();
 
             // Активируем панель диалога
             dialoguePanel.SetActive(true);
             currentDialogueIndex = 0;
             ShowDialoguePart(currentDialogueIndex);
+        }
+    }
+
+    private void StopAllMovement()
+    {
+        // Останавливаем Rigidbody
+        if (playerRigidbody != null)
+        {
+            playerRigidbody.linearVelocity = Vector3.zero;
+            playerRigidbody.angularVelocity = Vector3.zero;
+            playerRigidbody.isKinematic = true; // Полностью останавливаем физику
+        }
+
+        // Останавливаем анимации
+        if (playerAnimator != null)
+        {
+            playerAnimator.SetFloat("Speed", 0f);
+            playerAnimator.enabled = false; // Полностью отключаем аниматор
+        }
+
+        // Отключаем скрипты движения
+        MonoBehaviour[] scripts = playerObject.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in scripts)
+        {
+            if (script != this && script.enabled)
+            {
+                // Отключаем скрипты, которые могут управлять движением
+                if (script.GetType().Name.Contains("Movement") ||
+                    script.GetType().Name.Contains("Controller") ||
+                    script.GetType().Name.Contains("Player") && !script.GetType().Name.Contains("Dialogue"))
+                {
+                    script.enabled = false;
+                }
+            }
+        }
+    }
+
+    private void ResumeAllMovement()
+    {
+        // Восстанавливаем Rigidbody
+        if (playerRigidbody != null)
+        {
+            playerRigidbody.isKinematic = false;
+        }
+
+        // Восстанавливаем анимации
+        if (playerAnimator != null)
+        {
+            playerAnimator.enabled = true;
+        }
+
+        // Включаем скрипты движения обратно
+        MonoBehaviour[] scripts = playerObject.GetComponents<MonoBehaviour>();
+        foreach (MonoBehaviour script in scripts)
+        {
+            if (script != this && !script.enabled)
+            {
+                if (script.GetType().Name.Contains("Movement") ||
+                    script.GetType().Name.Contains("Controller") ||
+                    script.GetType().Name.Contains("Player") && !script.GetType().Name.Contains("Dialogue"))
+                {
+                    script.enabled = true;
+                }
+            }
+        }
+    }
+
+    // Метод для отключения джойстика
+    private void DisableJoystick()
+    {
+        if (joystick != null)
+        {
+            joystick.SetActive(false);
+        }
+    }
+
+    // Метод для включения джойстика
+    private void EnableJoystick()
+    {
+        if (joystick != null)
+        {
+            joystick.SetActive(true);
         }
     }
 
@@ -130,27 +218,50 @@ public class DialogueTrigger : MonoBehaviour
 
     private void UpdateDialogueImage(int index)
     {
-        if (dialogueImage != null && dialogueSprites != null && dialogueSprites.Length > 0)
+        if (dialogueImage != null)
         {
-            if (index < 4)
+            string dialogueText = dialogueParts[index];
+
+            // Определяем какое изображение показывать в зависимости от говорящего
+            if (dialogueText.Contains("*") && dialogueText.Contains("подходят"))
             {
-                dialogueImage.sprite = dialogueSprites[0];
+                // Событие - животные подходят, скрываем изображение
+                dialogueImage.gameObject.SetActive(false);
             }
-            else if (index < 9)
+            else if (dialogueText.StartsWith("Житель 1:"))
             {
-                dialogueImage.sprite = dialogueSprites[1];
+                dialogueImage.gameObject.SetActive(true);
+                dialogueImage.sprite = resident1Sprite;
             }
-            else if (index < 12)
+            else if (dialogueText.StartsWith("Житель 2:"))
             {
-                dialogueImage.sprite = dialogueSprites[2];
+                dialogueImage.gameObject.SetActive(true);
+                dialogueImage.sprite = resident2Sprite;
             }
-            else if (index < 17)
+            else if (dialogueText.StartsWith("Осел:"))
             {
-                dialogueImage.sprite = dialogueSprites[3];
+                dialogueImage.gameObject.SetActive(true);
+                dialogueImage.sprite = donkeySprite;
+            }
+            else if (dialogueText.StartsWith("Собака:"))
+            {
+                dialogueImage.gameObject.SetActive(true);
+                dialogueImage.sprite = dogSprite;
+            }
+            else if (dialogueText.StartsWith("Кошка:"))
+            {
+                dialogueImage.gameObject.SetActive(true);
+                dialogueImage.sprite = catSprite;
+            }
+            else if (dialogueText.StartsWith("Петух:"))
+            {
+                dialogueImage.gameObject.SetActive(true);
+                dialogueImage.sprite = roosterSprite;
             }
             else
             {
-                dialogueImage.sprite = dialogueSprites[4];
+                // Для любых других реплик скрываем изображение
+                dialogueImage.gameObject.SetActive(false);
             }
         }
     }
@@ -170,21 +281,25 @@ public class DialogueTrigger : MonoBehaviour
 
     private void AcceptQuest()
     {
+        // Устанавливаем флаг принятия квеста
+        questAccepted = true;
+
         dialoguePanel.SetActive(false);
         menuButton.gameObject.SetActive(true);
 
-        // Включаем джойстик обратно
-        if (joystick != null)
+        // Восстанавливаем движение
+        if (isInTrigger)
         {
-            joystick.SetActive(true);
+            ResumeAllMovement();
+            isInTrigger = false;
+        }
+
+        // Включаем джойстик обратно только если не активированы другие панели
+        if (!menuButton.gameObject.activeInHierarchy && (finalPanel == null || !finalPanel.activeInHierarchy))
+        {
+            EnableJoystick();
         }
         GameManager.isTouwn = true;
-    }
-
-    public void OnBanditsDefeated()
-    {
-        AreBanditsDefeated = true;
-        Invoke(nameof(ShowFinalScene), 3f);
     }
 
     private void ShowFinalScene()
@@ -192,23 +307,66 @@ public class DialogueTrigger : MonoBehaviour
         if (cityCrowd != null)
             cityCrowd.SetActive(true);
 
+        // Воспроизводим звук толпы при появлении толпы
+        PlayCrowdSound();
+
         Invoke(nameof(ShowFinalPanel), 7f);
+    }
+
+    // Метод для воспроизведения звука толпы
+    private void PlayCrowdSound()
+    {
+        if (Sounds.instance != null)
+        {
+            Sounds.instance.PlaySound(0, 1f); // Индекс 0, громкость 1f
+        }
+        else
+        {
+            Debug.LogWarning("Sounds instance not found!");
+        }
     }
 
     private void ShowFinalPanel()
     {
         if (finalPanel != null)
         {
+            // Отключаем джойстик при показе финальной панели
+            DisableJoystick();
+
             finalPanel.SetActive(true);
 
             if (finalText != null)
             {
-                finalText.text = "Поздравляем! Вы успешно завершили игру!\n\n" +
-                               "Бандиты побеждены, город спасен!\n\n" +
-                               "Теперь вы можете отыграть праздничный концерт\n" +
-                               "в честь победы над бандитами!\n\n" +
-                               "Спасибо за игру!";
+                finalText.text = "Поздравляем! Вы успешно завершили игру! " +
+                               "Бандиты побеждены, город спасен! " +
+                               "Теперь вы можете отыграть праздничный концерт " +
+                               "в честь победы над бандитами! " +
+                               "Спасибо за игру! ";
             }
         }
+    }
+
+    // Метод для кнопки меню (если она активирует какую-то панель)
+    public void OnMenuButtonClicked()
+    {
+        // Отключаем джойстик при активации меню
+        DisableJoystick();
+
+        // Здесь добавьте код для показа меню панели
+    }
+
+    // Метод для закрытия меню (если есть)
+    public void OnMenuCloseButtonClicked()
+    {
+        // Включаем джойстик при закрытии меню, если нет других активных панелей
+        if (!dialoguePanel.activeInHierarchy && (finalPanel == null || !finalPanel.activeInHierarchy))
+        {
+            EnableJoystick();
+        }
+    }
+
+    public void OnExitButtonClicked()
+    {
+        Debug.Log("Выход из игры");
     }
 }

@@ -22,6 +22,12 @@ public class CombinedLocationScript : MonoBehaviour
     [SerializeField] private string texttTrueTownAndHouse;
     [SerializeField] private string textFalseTown;
 
+    // Final variables
+    [SerializeField] private GameObject buttonFinal;
+    [SerializeField] private TextMeshProUGUI textFinal;
+    [SerializeField] private string texttTrueFinal;
+    [SerializeField] private string textFalseFinal;
+
     public static CombinedLocationScript instance;
 
     private void Awake()
@@ -81,6 +87,22 @@ public class CombinedLocationScript : MonoBehaviour
         {
             buttonTouwn.SetActive(false);
             textTouwn.text = textFalseTown;
+        }
+
+        CheckFinal();
+    }
+
+    public void CheckFinal()
+    {
+        if (GameManager.isHouseBandits || DialogueTrigger.AreBanditsDefeated)
+        {
+            buttonFinal.SetActive(true);
+            textFinal.text = texttTrueFinal;
+        }
+        else
+        {
+            buttonFinal.SetActive(false);
+            textFinal.text = textFalseFinal;
         }
     }
 }
